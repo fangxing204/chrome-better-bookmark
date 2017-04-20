@@ -198,11 +198,11 @@ function createInitialTree() {
           newNodes = fuzzySearch.search(text);
           resetUi(); 
           createUiFromNodes(newNodes) 
-          if (newNodes.length) focusItem(0);
 
           if (!newNodes.length || text !== newNodes[0].title) {
             addCreateCategoryButton(text);
           }
+          focusItem(0);
 
         } else {
           resetUi();

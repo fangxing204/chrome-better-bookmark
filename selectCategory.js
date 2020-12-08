@@ -39,7 +39,10 @@ function createUiElement(node) {
 
   var el = document.createElement("span");
   el.setAttribute("data-id", node.id);
-  el.setAttribute("data-count", node.children.length);
+  if(node.children){
+    el.setAttribute("data-count", node.children.length);
+  }
+  // console.log(node, node.titlePrefix + SEPARATOR + node.title)
   el.setAttribute("data-title", node.title);
   el.innerHTML = node.titlePrefix ? node.titlePrefix + SEPARATOR + node.title : node.title;
 
@@ -209,7 +212,7 @@ function createInitialTree() {
       setTimeout( function() {
         text = document.getElementById("search").value;
         if (text.length) {
-          newNodes = fuzzySearch.search(text);
+          newNodes = fuzzySearch.search(text).map(x => x.item);
           resetUi(); 
           createUiFromNodes(newNodes) 
 

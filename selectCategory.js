@@ -8,18 +8,32 @@ var DOWN_KEYCODE = 40;
 var UP_KEYCODE = 38;
 var CONFIRM_KEYCODE = 13;
 
-function filterRecursively(nodeArray, childrenProperty, filterFn, results) {
+var SEPARATOR = ' / '
 
+function filterRecursively(nodeArray, childrenProperty, filterFn, results, titlePrefix) {
   results = results || [];
 
   nodeArray.forEach( function( node ) {
+    node.titlePrefix = node.titlePrefix && titlePrefix ? titlePrefix + SEPARATOR + node.titlePrefix : titlePrefix
     if (filterFn(node)) results.push( node );
-    if (node.children) filterRecursively(node.children, childrenProperty, filterFn, results);
+    
+    var nextPrefix = node.id > 0 ?  node.title : ''
+    if (node.children) filterRecursively(node.children, childrenProperty, filterFn, results, nextPrefix);
   });
 
   return results;
 
 };
+
+// function getParentPath(node, prefix){
+//   prefix = prefix || '/'
+//   if(node.parentId){
+//     return prefix + '/' + getParentPath(chrome.bookmarks.get(node.parentId), prefix)
+//   } else {
+//     return prefix + '/' + node.title
+//   }
+
+// }
 
 function createUiElement(node) {
 
@@ -27,7 +41,7 @@ function createUiElement(node) {
   el.setAttribute("data-id", node.id);
   el.setAttribute("data-count", node.children.length);
   el.setAttribute("data-title", node.title);
-  el.innerHTML = node.title;
+  el.innerHTML = node.titlePrefix ? node.titlePrefix + SEPARATOR + node.title : node.title;
 
   return el;
 

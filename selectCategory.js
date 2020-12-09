@@ -155,8 +155,8 @@ function createInitialTree() {
     wrapper = document.getElementById("wrapper");
 
     var options = {
-      keys: ['title'],
-      threshold: 0.4
+      keys: ['pinyinTitle', 'firstLetter'],
+      threshold: 0.1
     }
     
     categoryNodes = filterRecursively(t, "children", function(node) {
@@ -171,6 +171,20 @@ function createInitialTree() {
 
     if (currentNodeCount > 0) focusItem(0);
 
+    if(Pinyin.isSupported()){
+      categoryNodes = categoryNodes.map( x => {
+        // TODO 汉字拼音用空格分开，让模糊搜索更好， 但是这样英语单词也会被分开
+        if(x.title.match(/[\u3400-\u9FBF]/)){
+          console.log(x.title)
+          x.pinyinTitle = Pinyin.convertToPinyin(x.title, ' ', true)
+        } else {
+          x.pinyinTitle = x.title
+        }
+        x.firstLetter = x.pinyinTitle.match(/\b\w/g).join('')
+        console.log(x.pinyinTitle)
+        return x;
+      });
+    }
     fuzzySearch = new Fuse(categoryNodes, options);
 
     wrapper.addEventListener("click", function(e) {

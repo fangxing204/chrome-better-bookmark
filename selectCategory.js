@@ -10,6 +10,8 @@ var CONFIRM_KEYCODE = 13;
 
 var SEPARATOR = ' / '
 
+var browser = typeof chrome === 'object' ? chrome : browser
+
 function filterRecursively(nodeArray, childrenProperty, filterFn, results, titlePrefix) {
   results = results || [];
 
@@ -50,7 +52,7 @@ function triggerClick(element) {
 
     newCategoryTitle = element.getAttribute("data-title");
 
-    chrome.bookmarks.create({
+    browser.bookmarks.create({
       title: newCategoryTitle
     }, function(res) {
       processBookmark(res.id);
@@ -79,7 +81,7 @@ function processBookmark(categoryId) {
 
 function addBookmarkToCategory(categoryId, title, url) {
 
-  chrome.bookmarks.create({
+  browser.bookmarks.create({
     'parentId': categoryId,
     'title': title,
     'url': url
@@ -89,7 +91,7 @@ function addBookmarkToCategory(categoryId, title, url) {
 
 function getCurrentUrlData(callbackFn) {
 
-  chrome.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
+  browser.tabs.query({'active': true, 'currentWindow': true}, function (tabs) {
     callbackFn(tabs[0].url, tabs[0].title)
   });
 
@@ -132,7 +134,7 @@ function addCreateCategoryButton(categoryName) {
   el.setAttribute("data-id", "NEW");
   el.setAttribute("data-title", categoryName);
   el.classList.add("create");
-  el.innerHTML = chrome.i18n.getMessage("new") + ": " + categoryName;
+  el.innerHTML = browser.i18n.getMessage("new") + ": " + categoryName;
 
   wrapper.appendChild(el);
   currentNodeCount = currentNodeCount + 1;
@@ -141,7 +143,7 @@ function addCreateCategoryButton(categoryName) {
 
 function createInitialTree() {
 
-  chrome.bookmarks.getTree( function(t) {
+  browser.bookmarks.getTree( function(t) {
 
     wrapper = document.getElementById("wrapper");
 
@@ -166,7 +168,7 @@ function createInitialTree() {
       categoryNodes = categoryNodes.map( x => {
         // TODO 汉字拼音用空格分开，让模糊搜索更好， 但是这样英语单词也会被分开
         if(x.title.match(/[\u3400-\u9FBF]/)){
-          console.log(x.title)
+          // console.log(x.title)
           x.pinyinTitle = Pinyin.convertToPinyin(x.title, ' ', true)
         } else {
           x.pinyinTitle = x.title

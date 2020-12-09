@@ -25,15 +25,6 @@ function filterRecursively(nodeArray, childrenProperty, filterFn, results, title
 
 };
 
-// function getParentPath(node, prefix){
-//   prefix = prefix || '/'
-//   if(node.parentId){
-//     return prefix + '/' + getParentPath(chrome.bookmarks.get(node.parentId), prefix)
-//   } else {
-//     return prefix + '/' + node.title
-//   }
-
-// }
 
 function createUiElement(node) {
 
@@ -181,7 +172,7 @@ function createInitialTree() {
           x.pinyinTitle = x.title
         }
         x.firstLetter = x.pinyinTitle.match(/\b\w/g).join('')
-        console.log(x.pinyinTitle)
+        // console.log(x.pinyinTitle)
         return x;
       });
     }

@@ -7,7 +7,7 @@ WebStore URL:
 
 key binding
 ===========
-[Chrome extensions shortcuts](chrome://extensions/shortcuts)
+Chrome extensions shortcuts `chrome://extensions/shortcuts`
 
 TODO
 ====
